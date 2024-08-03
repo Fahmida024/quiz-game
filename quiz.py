@@ -28,16 +28,25 @@ answerboxes=[answerbox1,answerbox2,answerbox3,answerbox4]
 def draw():
     screen.fill('coral')
     screen.draw.filled_rect(questionbox,'black')
-    screen.draw.filled_rect(answerbox1,'gray')
-    screen.draw.filled_rect(answerbox2,'gray')
-    screen.draw.filled_rect(answerbox3,'gray')
-    screen.draw.filled_rect(answerbox4,'gray')
+    for box in answerboxes:
+         screen.draw.filled_rect(box,'gray')
     screen.draw.filled_rect(timerbox,'brown')
     screen.draw.filled_rect(skipbox,'pink')
+    screen.draw.textbox('skip',skipbox,color='brown')
+    screen.draw.textbox(question[0].strip(),questionbox,color='gray')
+    index=1
+    for i in answerboxes:
+         screen.draw.textbox(question[index].strip(),i,color='brown')
+         index=index+1
+    screen.draw.textbox(str(timeleft),timerbox,color='black')
+
+
+
 def update():
     pass
 
-def readquesionfile():
+
+def readquestionfile():
     global questioncount, questions
     q_file=open('questions.txt','r')
     for i in q_file:
@@ -45,10 +54,50 @@ def readquesionfile():
         questioncount=questioncount+1
     q_file.close()
 
-readquesionfile()
+
+def correctanswer():
+     global score, question, questions
+     score=score+1
+     if questions:
+          question=readnextquestion()
+     else:
+          game_over()
+
+def game_over():
+    global question, gameover
+    message='game over'
+    question=[message,'-','-','-','-',3]
+    gameover=True
 
 
+def readnextquestion():
+    global questionindex
+    questionindex=questionindex+1
+    return questions.pop(0).split(',')
 
+def on_mouse_down(pos):
+    global question
+    index=1
+    for box in answerboxes:
+        print(box)
+        if box.collidepoint(pos):
+             if index is int(question[5]):
+                  correctanswer()
+             else:
+                  game_over()
+        index=index+1
+
+readquestionfile()
+
+question=readnextquestion()
+
+            
+             
+    
+
+
+for box in answerboxes:
+        print(box)
 
 
 
