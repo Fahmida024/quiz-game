@@ -56,16 +56,23 @@ def readquestionfile():
 
 
 def correctanswer():
-     global score, question, questions
+     global score, question, questions, timeleft
      score=score+1
      if questions:
           question=readnextquestion()
+          timeleft=10
      else:
           game_over()
 
+    
+
+
+
+
+
 def game_over():
-    global question, gameover
-    message='game over'
+    global question, gameover, score
+    message= f'game over|You got {score} questions correct'
     question=[message,'-','-','-','-',3]
     gameover=True
 
@@ -86,32 +93,46 @@ def on_mouse_down(pos):
              else:
                   game_over()
         index=index+1
+    if skipbox.collidepoint(pos):
+          skipquestion()
+
+
+def skipquestion():
+     global questions, question, timeleft
+     if questions:
+          question=readnextquestion()
+          timeleft=10
+     else:
+          game_over()
+
+
+
+     
+
+
+def timer():
+     global timeleft
+     if timeleft:
+          timeleft=timeleft-1
+     else:
+          game_over()
+
+clock.schedule_interval(timer,1)
+
+     
+
+
+
 
 readquestionfile()
 
 question=readnextquestion()
 
             
-             
-    
 
 
 for box in answerboxes:
         print(box)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 pgzrun.go()
